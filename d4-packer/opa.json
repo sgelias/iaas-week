@@ -22,11 +22,11 @@
   "provisioners": [
     {
       "type": "shell",
-      "script":"./provisioners/scripts/install_python.sh"
+      "script":"./d4-packer/provisioners/scripts/install_python.sh"
     },
     {
       "type": "ansible",
-      "playbook_file": "./provisioners/ansible/setup-k8s.yml",
+      "playbook_file": "./d4-packer/provisioners/ansible/setup-k8s.yml",
       "user": "{{user `ssh_username`}}",
       "ansible_env_vars": [
         "ANSIBLE_HOST_KEY_CHECKING=False"
