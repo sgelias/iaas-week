@@ -27,13 +27,13 @@ steps:
       - packer validate d4-packer/*.json
   
   - name: terraform plan and apply
-    image: hashicorp/packer:light
+    image: hashicorp/terraform:light
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: AWS_ACCESS_KEY_ID
       AWS_SECRET_ACCESS_KEY:
         from_secret: AWS_SECRET_ACCESS_KEY
     commands:
-      - terraform init -var "hash_commit=$DRONE_COMMIT" d3-terraform/
-      - terraform plan -var "hash_commit=$DRONE_COMMIT" -out build_plan d3-terraform/
+      - terraform init -var "hash_commit=$DRONE_COMMIT" ./d3-terraform/
+      - terraform plan -var "hash_commit=$DRONE_COMMIT" -out build_plan ./d3-terraform/
       - terraform apply build_plan
