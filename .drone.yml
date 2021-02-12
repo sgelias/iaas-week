@@ -1,0 +1,39 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+
+  - name: validate
+    image: hashicorp/packer:light
+    commands:
+      - apk -U add ansible
+      - packer validate d4-packer/*.json
+
+  - name: build
+    image: hashicorp/packer:light
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      VPC_ID:
+        from_secret: VPC_ID
+      SUBNET_ID:
+        from_secret: SUBNET_ID
+    commands:
+      - apk -U add ansible
+      - packer validate d4-packer/*.json
+  
+  - name: terraform plan and apply
+    image: hashicorp/packer:light
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+    commands:
+      - terraform init -var "hash_commit=$DRONE_COMMIT" d2-terraform/
+      - terraform plan -var "hash_commit=$DRONE_COMMIT" -out build_plan d2-terraform/
+      - terraform apply build_plan
