@@ -34,6 +34,6 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: AWS_SECRET_ACCESS_KEY
     commands:
-      - terraform init -var "hash_commit=$DRONE_COMMIT" d2-terraform/
-      - terraform plan -var "hash_commit=$DRONE_COMMIT" -out build_plan d2-terraform/
+      - terraform init -var "hash_commit=$DRONE_COMMIT" d3-terraform/
+      - terraform plan -var "hash_commit=$DRONE_COMMIT" -out build_plan d3-terraform/
       - terraform apply build_plan
